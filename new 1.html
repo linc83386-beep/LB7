@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЛР №7 — Магічна куля</title>
+</head>
+<body></body>
+<script>
+    const style = document.createElement("style");
+    style.textContent = `
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body {
+            min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            background: #0b0e23; padding: 15px;
+        }
+        .box {
+            width: 100%; max-width: 500px; min-height: 80vh; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-evenly;
+            border: 3px solid; border-image: linear-gradient(135deg, #4ae815, #18b5d9) 1;
+            background: radial-gradient(circle, #131836, #090c1d);
+        }
+        input {
+            width: 90%; padding: 12px 20px; border-radius: 50px; border: 2px solid transparent;
+            background: #ecd6f5; color: #4b1d52; text-align: center; outline: none;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+        }
+        input.err { border-color: #ff4d6d; }
+        .msg { color: #ff758f; font-size: 0.9rem; min-height: 1.2em; text-align: center; }
+        .ball {
+            width: min(70vw, 330px); height: min(70vw, 330px); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            position: relative; user-select: none; transition: transform 0.2s;
+            background:
+                radial-gradient(circle at 30% 25%, rgba(255,255,255,0.8), transparent 30%),
+                radial-gradient(circle at 65% 40%, rgba(244,114,182,0.5), transparent 55%),
+                radial-gradient(circle at 35% 65%, rgba(56,189,248,0.5), transparent 55%),
+                radial-gradient(circle, #2a194a 0%, #090616 80%);
+            box-shadow: inset -12px -12px 30px #000, 0 0 35px rgba(192,132,252,0.5);
+        }
+        .ball:active { transform: scale(0.95); }
+        .ans {
+            color: #fff; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: bold;
+            text-align: center; padding: 0 15px;
+            text-shadow: 0 0 10px #4a1d75, 0 0 20px #c084fc;
+        }
+    `;
+    document.head.appendChild(style);
+
+    const box = document.createElement("div");
+    box.className = "box";
+
+    const input = document.createElement("input");
+    input.placeholder = "Введіть запитання...";
+    input.value = "Чи буде завтра сонячно?";
+
+    const msg = document.createElement("div");
+    msg.className = "msg";
+
+    const ball = document.createElement("div");
+    ball.className = "ball";
+
+    const ans = document.createElement("span");
+    ans.className = "ans";
+    ans.textContent = "Yes";
+
+    ball.appendChild(ans);
+    box.append(input, msg, ball);
+    document.body.appendChild(box);
+
+    const answers = ["Так", "Ні", "Можливо", "Роби, що хочеш"];
+
+    function ask() {
+        const q = input.value.trim();
+        if (q.length < 3 || !q.endsWith("?") || !/[a-zA-Zа-яА-ЯіІїЇєЄґҐ]/.test(q)) {
+            msg.textContent = "Введіть коректне запитання зі знаком '?' у кінці!";
+            input.classList.add("err");
+            return;
+        }
+        msg.textContent = "";
+        input.classList.remove("err");
+        ans.textContent = answers[Math.floor(Math.random() * answers.length)];
+    }
+
+    ball.onclick = ask;
+    input.onkeydown = (e) => { if (e.key === "Enter") ask(); };
+</script>
+</html>
